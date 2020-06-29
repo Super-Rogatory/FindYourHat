@@ -48,6 +48,13 @@ class Field {
         } while(realInput);
         
     }
+    isHat(){
+        if(this._playarea[this._rowPosition][this._elementPosition] === hat){
+            console.log("You found the hat!!");
+            realInput = false; // this will make it so that the do-while is no longer running.
+            return;
+        }
+    }
     moveUp(){
         if(this._rowPosition === 0) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
             console.log("You are out of bounds! GAME OVER. *too high up* ");
@@ -58,9 +65,10 @@ class Field {
             console.log("You have fallen into the abyss.");
             realInput = false; // this will make it so that the do-while is no longer running.
             return;
-        }
-        this._rowPosition -= 1;
-        this._playarea[this._rowPosition][this._elementPosition] = pathCharacter;
+        }   
+        this._rowPosition -= 1; // if it's not out of bounds or dropped into a hole..continue logic.
+        this.isHat();
+        if(realInput) this._playarea[this._rowPosition][this._elementPosition] = pathCharacter; // if no guard clauses are hit. and the input is real. continue changing grid .
         this.print();
     }
     moveDown(){
@@ -75,7 +83,8 @@ class Field {
             return;
         }
         this._rowPosition += 1;
-        this._playarea[this._rowPosition][this._elementPosition] = pathCharacter;
+        this.isHat();
+        if(realInput) this._playarea[this._rowPosition][this._elementPosition] = pathCharacter; // if no guard clauses are hit. and the input is real. continue changing grid .
         this.print();
         //console.log(this._currentPosition); // for testing purposes.//this._currentPosition = this._playarea[this._rowPosition][this._elementPosition]; for testing purposes.
     }
@@ -91,7 +100,8 @@ class Field {
             return;
         }
         this._elementPosition -= 1;
-        this._playarea[this._rowPosition][this._elementPosition] = pathCharacter;
+        this.isHat();
+        if(realInput) this._playarea[this._rowPosition][this._elementPosition] = pathCharacter; // if no guard clauses are hit. and the input is real. continue changing grid .
         this.print();
     }
     moveRight(){
@@ -107,7 +117,8 @@ class Field {
             return;
         }
         this._elementPosition += 1;
-        this._playarea[this._rowPosition][this._elementPosition] = pathCharacter; // replaces original character with * to resemble a moving player.
+        this.isHat();
+        if(realInput) this._playarea[this._rowPosition][this._elementPosition] = pathCharacter; // if no guard clauses are hit. and the input is real. continue changing grid .
         this.print();
     }
     quit(){
