@@ -1,3 +1,11 @@
+/* TODO 
+    1.) fix generateField.
+        1a.) fix nested loop
+        1b.) include comma seperated characters in the 2D array.
+    2.) fix 2-D array problem.
+    3.) add functions to encapsulate some of the code. reduce repeating code.
+
+*/
 const prompt = require('prompt-sync')({sigint: true});
 
 const hat = '^'; // represents hat
@@ -16,6 +24,7 @@ class Field {
         this._currentPosition = this._startingPosition; // equal to a [value, value]
     }
     print(){
+        console.log(this._playarea);
         console.log(this._playarea.join('\n'));
     }
     play(){
@@ -55,7 +64,17 @@ class Field {
             return;
         }
     }
+    /*
+    checkBound(){
+        if(this._rowPosition === 0 || this._rowPosition === 2 || this._elementPosition === 0 || this._elementPosition === 0){
+            console.log("You are out of bounds!");
+            realInput = false;
+            return;
+        }
+    }
+    */
     moveUp(){
+        //this.checkBound();
         if(this._rowPosition === 0) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
             console.log("You are out of bounds! GAME OVER. *too high up* ");
             realInput = false; // this will make it so that the do-while is no longer running.
@@ -72,6 +91,7 @@ class Field {
         this.print();
     }
     moveDown(){
+        //this.checkBound();
         if(this._rowPosition === 2) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
             console.log("You are out of bounds! GAME OVER. *too far down*");
             realInput = false; // this will make it so that the do-while is no longer running.
@@ -89,6 +109,7 @@ class Field {
         //console.log(this._currentPosition); // for testing purposes.//this._currentPosition = this._playarea[this._rowPosition][this._elementPosition]; for testing purposes.
     }
     moveLeft(){
+        //this.checkBound();
         if(this._elementPosition === 0) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
             console.log("You are out of bounds! GAME OVER. *leftist much?*");
             realInput = false; // this will make it so that the do-while is no longer running.
@@ -106,11 +127,14 @@ class Field {
     }
     moveRight(){
         // CREATE FUNCTIONS LATER.
+        //this.checkBound();
+        // the first check is the bounds
         if(this._elementPosition === 2) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
             console.log("You are out of bounds! GAME OVER. *ok boomer.*");
             realInput = false; // this will make it so that the do-while is no longer running.
             return;
         }
+        // the second check are the holes.
         if(this._playarea[this._rowPosition][this._elementPosition + 1] === hole){
             console.log("You have fallen into the abyss.");
             realInput = false; // this will make it so that the do-while is no longer running.
@@ -120,6 +144,36 @@ class Field {
         this.isHat();
         if(realInput) this._playarea[this._rowPosition][this._elementPosition] = pathCharacter; // if no guard clauses are hit. and the input is real. continue changing grid .
         this.print();
+    }
+    static generateField(height, width){
+        /*
+        const hat = '^'; // represents hat
+        const hole = 'O'; // represents pitfalls
+        const fieldCharacter = '░'; // represents neutral area
+        const pathCharacter = '*';  
+        */
+       // need to generate a random sequence of field and holes.
+       // need to push each sequence into an array.
+       // one hat, start at top left.
+        const characters = [hole, fieldCharacter];
+        let randomIndex;
+        let characterSet = false;
+        let newField = [];
+        let rowString = "";
+        // FIX Nested for loop. May be overkill, try and optimize.
+        for(let i = 0; i < width; i++){
+            for(let i = 0; i < height; i++){
+                randomIndex = Math.floor(Math.random() * characters.length);
+                //if(!characterSet) { rowString = pathCharacter; characterSet = true; }
+                rowString = rowString + characters[randomIndex];
+            }
+            newField.push(rowString);
+            rowString = "";
+        }
+        console.log(newField);
+        console.log(newField.join('\n'));
+        //this._playarea;
+        return;
     }
     quit(){
         console.log("Exiting.");
@@ -131,8 +185,8 @@ const fieldarea = new Field([
     ['░', 'O', '░'],
     ['░', '^', '░']
 ]);
-
-
+Field.generateField(5, 4);
+fieldarea.print();
 // Prompt User
 const isPlay = prompt("FindYourHat! Y (for play) | N (to exit) ");
 if(isPlay.toLowerCase() === 'y') fieldarea.play(); //play will be a higher order function
