@@ -1,9 +1,8 @@
 /* TODO 
     1.) fix generateField.
         1a.) fix nested loop
-        1b.) include comma seperated characters in the 2D array.
-    2.) fix 2-D array problem.
-    3.) add functions to encapsulate some of the code. reduce repeating code.
+    2.) add functions to encapsulate some of the code. reduce repeating code.
+
 
 */
 const prompt = require('prompt-sync')({sigint: true});
@@ -17,14 +16,12 @@ let realInput = true; // this is neccessary for the do-while logic
 class Field {
     constructor(playarea) {
         this._playarea = playarea; //where playarea is a 2-D array
-        //this._unjoinedArea = playarea;
         this._rowPosition = 0;
         this._elementPosition = 0;
         this._startingPosition = playarea[this._rowPosition][this._elementPosition];
         this._currentPosition = this._startingPosition; // equal to a [value, value]
     }
     print(){
-        console.log(this._playarea);
         console.log(this._playarea.join('\n'));
     }
     play(){
@@ -146,34 +143,21 @@ class Field {
         this.print();
     }
     static generateField(height, width){
-        /*
-        const hat = '^'; // represents hat
-        const hole = 'O'; // represents pitfalls
-        const fieldCharacter = '░'; // represents neutral area
-        const pathCharacter = '*';  
-        */
-       // need to generate a random sequence of field and holes.
-       // need to push each sequence into an array.
-       // one hat, start at top left.
         const characters = [hole, fieldCharacter];
         let randomIndex;
-        let characterSet = false;
         let newField = [];
-        let rowString = "";
-        // FIX Nested for loop. May be overkill, try and optimize.
-        for(let i = 0; i < width; i++){
-            for(let i = 0; i < height; i++){
+        let rowArray = [];
+        // FIX Nested for loop. May be overkill, try and optimize later.
+        for(let i = 0; i < height; i++){
+            for(let j = 0; j < width; j++){
                 randomIndex = Math.floor(Math.random() * characters.length);
-                //if(!characterSet) { rowString = pathCharacter; characterSet = true; }
-                rowString = rowString + characters[randomIndex];
+                rowArray.push(characters[randomIndex]);
             }
-            newField.push(rowString);
-            rowString = "";
+            newField.push(rowArray); // pass pushed character Array into a newField (total array)
+            newField[0][0] = pathCharacter;  // set the top left corner equal to the original pathCharacter.
+            rowArray = []; //reset the row that is going to be passed to the newField.
         }
-        console.log(newField);
-        console.log(newField.join('\n'));
-        //this._playarea;
-        return;
+        return newField;
     }
     quit(){
         console.log("Exiting.");
@@ -185,12 +169,18 @@ const fieldarea = new Field([
     ['░', 'O', '░'],
     ['░', '^', '░']
 ]);
-Field.generateField(5, 4);
-fieldarea.print();
+
 // Prompt User
+/*
+fieldarea.print();
 const isPlay = prompt("FindYourHat! Y (for play) | N (to exit) ");
 if(isPlay.toLowerCase() === 'y') fieldarea.play(); //play will be a higher order function
 else fieldarea.quit(); //quick exit prompt
+*/
+
+const isPlay = Field.generateField(3, 3);
+const testFieldArea = new Field(isPlay);
+testFieldArea.play();
 
 
 
