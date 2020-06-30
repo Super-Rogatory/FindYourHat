@@ -16,10 +16,8 @@ let realInput = true; // this is neccessary for the do-while logic
 class Field {
     constructor(playarea) {
         this._playarea = playarea; //where playarea is a 2-D array
-        this._rowPosition = 0;
-        this._elementPosition = 0;
-        this._startingPosition = playarea[this._rowPosition][this._elementPosition];
-        this._currentPosition = this._startingPosition; // equal to a [value, value]
+        this._rowPosition = 0; // x-coordinate
+        this._elementPosition = 0; //y-coordinate
     }
     print(){
         console.log(this._playarea.join('\n'));
@@ -89,7 +87,8 @@ class Field {
     }
     moveDown(){
         //this.checkBound();
-        if(this._rowPosition === 2) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
+        let lowerBorder = this._playarea.length - 1;
+        if(this._rowPosition === lowerBorder) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
             console.log("You are out of bounds! GAME OVER. *too far down*");
             realInput = false; // this will make it so that the do-while is no longer running.
             return;
@@ -126,7 +125,8 @@ class Field {
         // CREATE FUNCTIONS LATER.
         //this.checkBound();
         // the first check is the bounds
-        if(this._elementPosition === 2) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
+        let rightBorder = this._playarea[0].length - 1;
+        if(this._elementPosition === rightBorder) { // if you are calling the moveUp function while the rowPosition is at 0. You will go out of bounds.
             console.log("You are out of bounds! GAME OVER. *ok boomer.*");
             realInput = false; // this will make it so that the do-while is no longer running.
             return;
